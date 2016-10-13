@@ -1,0 +1,6 @@
+[submodule "themes/hexo-theme-Anisina"]
+	path = themes/hexo-theme-Anisina
+	url = https://github.com/Haojen/hexo-theme-Anisina.git
+[submodule "themes/TKL"]
+    path = themes/TKL
+    url = git@github.com:SuperKieran/TKL.git
