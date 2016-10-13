@@ -1,0 +1,5 @@
+# public
+.deploy_git
+
+# mac
+.DS_Store
