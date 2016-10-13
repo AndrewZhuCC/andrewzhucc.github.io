@@ -38,17 +38,15 @@
   color: color-link;
 }
 figure.highlight {
-  background: #f5f5f5;
   border: 1px solid color-border;
   margin-top: 15px;
-  padding: 7px 15px 7px 10px;
+  padding: 7px 15px;
   border-radius: 2px;
   text-shadow: 0 0 1px #fff;
   line-height: 1.6;
   overflow: auto;
   position: relative;
-  font-size: 1em;
-  font-family: font-mono;
+  font-size: 0.9em;
 }
 figure.highlight figcaption {
   color: color-meta;
@@ -61,7 +59,7 @@ figure.highlight figcaption a {
 }
 figure.highlight pre {
   border: none;
-  padding: 0;
+  padding: 10px;
   margin: 0;
 }
 figure.highlight table {
@@ -70,14 +68,16 @@ figure.highlight table {
 }
 figure.highlight .gutter {
   color: color-meta;
-  padding-right: 8px;
+  padding-right: 15px;
   border-right: 1px solid color-border;
   text-align: right;
 }
 figure.highlight .code {
-  padding-left: 8px;
   border-left: 1px solid #fff;
   color: #666;
+}
+figure.highlight .line {
+  height: 20px;
 }
 pre .comment,
 pre .template_comment,
@@ -146,4 +146,7 @@ pre .clojure .title {
 }
 pre .deletion {
   color: #dc322f;
+}
+.gutter {
+  width: 70px;
 }
