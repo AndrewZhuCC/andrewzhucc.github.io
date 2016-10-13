@@ -44,7 +44,7 @@ anchorjs: false                        # if you want to customize anchor. check 
 #disqus_username:
 
 # Duoshuo settings
-#duoshuo_username:  # 你的多说帐号
+duoshuo_username: andrewzhu # 你的多说帐号
 # Share component is depend on Comment so we can NOT use share only.
 #duoshuo_share: true                     # set to false if you want to use Comment without Sharing
 
@@ -74,6 +74,7 @@ public_dir: public
 tag_dir: tags
 archive_dir: archives
 category_dir: categories
+about_dir: About
 code_dir: downloads/code
 i18n_dir: :lang
 skip_render:
