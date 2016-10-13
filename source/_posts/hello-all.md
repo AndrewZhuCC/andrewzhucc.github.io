@@ -1,6 +1,7 @@
 ---
 title: Hello to all
 date: 2016-02-22 09:13:40
+layout: false
 tags: 日志
 ---
 
