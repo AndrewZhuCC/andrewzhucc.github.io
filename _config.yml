@@ -70,6 +70,9 @@ theme: TKL
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: git
+- type: git
   repo: git@github.com:AndrewZhuCC/andrewzhucc.github.io.git
+  branch: master
+- type: git
+  repo: git@git.coding.net:AndrewZhu/andrewzhu.git
   branch: master
