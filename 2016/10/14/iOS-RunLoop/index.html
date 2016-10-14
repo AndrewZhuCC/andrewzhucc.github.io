@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        Andrew&#39;s blog
+        iOS RunLoop｜Andrew&#39;s blog
         
     </title>
 
-    <link rel="canonical" href="http://andrewzhucc.github.io/archives/">
+    <link rel="canonical" href="http://andrewzhucc.github.io/2016/10/14/iOS-RunLoop/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -101,7 +101,7 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
 " data-ishome = "false" >
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -204,83 +204,211 @@
 </script>
 
 <!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="http://oezaue6s2.bkt.clouddn.com/background/Linux.jpg">
+
+
 <style>
-    .intro-header .site-heading {
-        margin: 50px;
+    
+    header.intro-header {
+        background-image: url('http://oezaue6s2.bkt.clouddn.com/background/Linux.jpg')
     }
+
+    
 </style>
 
-<!-- Page Header -->
 <header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading text-center">
-                    <h1>archives</h1>
-                    <span class="subheading">可以根据归档日期检索所有文件</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>iOS RunLoop</h1>
+                    
+                    <span class="meta">
+                         作者 Andrew Zhu
+                        <span>
+                          日期 2016-10-14
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/tags/#iOS"
+                           title="iOS">iOS</a>
+                        
+                        <a class="tag" href="/tags/#Code"
+                           title="Code">Code</a>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="post-title-haojen">
+        <span>
+            iOS RunLoop
+        </span>
+    </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- archive list -->
-            
-				
-				
-				
-					
-					
-					<div class="archive archive-year" data-date="2016">
-						<h2 class="archive-title">
-						<span class="fa fa-archive">
-							<a href="/archives/2016">2016</a>
-						</span>
-						</h2>
-				
-				
-					
-					
-					<div class="archive archive-month" data-date="201610">
-						<h3 class="archive-title">
-							<a href="/archives/2016/10">10</a>
-						</h3>
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/2016/10/14/iOS-RunLoop/">
-                        <h4 class="post-title">
-                            iOS RunLoop
-                        </h4>
-                        
-                    </a>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <h1 id="RunLoop"><a href="#RunLoop" class="headerlink" title="RunLoop"></a>RunLoop</h1><h2 id="CFRunLoop-vs-NSRunLoop"><a href="#CFRunLoop-vs-NSRunLoop" class="headerlink" title="CFRunLoop vs NSRunLoop"></a><code>CFRunLoop</code> vs <code>NSRunLoop</code></h2><p><code>CFRunLoop</code> 是 <code>NSRunLoop</code> 在 <code>CoreFoundation</code> 中的底层形式，即 <code>NSRunLoop</code> 是 <code>CFRunLoop</code> 的封装。<br></p>
+<p><code>CFRunLoop</code> 有一个通用启动方法，<code>NSRunLoop</code> 通过指定该方法的 <code>timeout</code> 参数和 <code>stopAfterHandle</code> ，来实现<br><figure class="highlight obj-c"><table><tr><td class="code"><pre><div class="line">[[<span class="built_in">NSRunLoop</span> currentRunLoop] run];</div></pre></td></tr></table></figure></p>
+<p>和<br><figure class="highlight obj-c"><table><tr><td class="code"><pre><div class="line">[[<span class="built_in">NSRunLoop</span> currentRunLoop] runUntilDate:[<span class="built_in">NSDate</span> date]];</div></pre></td></tr></table></figure></p>
+<h2 id="source0-vs-source1"><a href="#source0-vs-source1" class="headerlink" title="source0 vs source1"></a><code>source0</code> vs <code>source1</code></h2><p>我们平时在 <code>NSThread</code> 层手动创建线程的时候，会手动启动一个 <code>NSRunLoop</code>。代码形如<br><figure class="highlight obj-c"><table><tr><td class="code"><pre><div class="line">[[<span class="built_in">NSRunLoop</span> currentRunLoop] addPort:[<span class="built_in">NSMachPort</span> port] forMode:<span class="built_in">NSDefaultRunLoopMode</span>];</div><div class="line"><span class="keyword">while</span> (running) &#123;</div><div class="line">	[[<span class="built_in">NSRunLoop</span> currentRunLoop] run];</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>在代码中向 <code>NSRunLoop</code> 添加的 <code>[NSMachPort port]</code> 即是一个端口，通常用于通过 <code>Mach</code> 实现进程间通信。在此添加是为了不让 <code>runloop</code> 一直处于循环之中，添加 <code>port</code> 可以使 <code>runloop</code> 在没有事件需要处理的时候进入等待状态。<br><br><code>NSMachPort</code> 就属于一种 <code>source1</code> ，添加到 <code>runloop</code> 当中。其他进程可以通过其暴露的 <code>port</code> 向其通信，并且唤醒 <code>runloop</code> 开始处理事件。<br><br>比如：</p>
+<ul>
+<li><p>硬件方面</p>
+<ul>
+<li>各种传感器传来的事件</li>
+<li>用户点击屏幕的事件等</li>
+</ul>
+</li>
+<li><p>底层事件</p>
+<ul>
+<li>如网络请求等</li>
+</ul>
+</li>
+</ul>
+<p><code>source1</code> 被处理时会触发添加 <code>source</code> 时声明的回调函数。<br><br>比如用户触摸屏幕会由系统将 <code>source1</code> 标记为已准备，而 <code>app</code> 层面的 <code>UIEvent</code> 则是在该 <code>source1</code> 的回调函数中手动触发某 <code>source0</code>，然后唤醒 <code>runloop</code> 处理该 <code>source0</code>。因此，接收到 <code>UIEvent</code> 是从 <code>source0</code> 处被调用。</p>
+<h2 id="CFRunLoop-流程"><a href="#CFRunLoop-流程" class="headerlink" title="CFRunLoop 流程"></a><code>CFRunLoop</code> 流程</h2>
+<textarea id="flowchart_code" style="display: none;">
+start=>start: CFRunLoop
+end=>end: Exit
+op1=>operation: Get CurrentMode
+op2=>operation: doObserver: kCFRunLoopEntry
+op3=>operation: Entry: currentMode
+op4=>operation: doObserver: kCFRunLoopBeforeTimers
+op5=>operation: doObserver: kCFRunLoopBeforeSources
+op6=>operation: doBlocks: from dispatch (?)
+op7=>operation: doSource0: 调用被CFRunLoopSourceSignal(source)标记的source0
+op8=>operation: doBlocks
+cond1=>condition: source1 ready?
+op9=>operation: doObserver: kCFRunLoopBeforeWaiting
+op10=>operation: mach_msg(msg, MACH_RCV_MSG, port)
+cond2=>condition: WakeUp?
+op11=>operation: doObserver: kCFRunLoopAfterWaiting
+op12=>operation: handleMsg
+op13=>operation: doTimers/do dispatch到main_queue的block/doSource1
+op14=>operation: doBlocks
+cond3=>condition: ModeIsEmpty?
+op15=>operation: doObserver: kCFRunLoopExit
+
+start->op1->op2->op3->op4->op5->op6->op7->op8
+op8->cond1
+cond1(yes)->op12
+cond1(no, left)->op9->op10
+op10->cond2
+cond2(yes)->op11
+op11(right)->op12->op13->op14->cond3
+cond3(no, left)->op4
+cond3(yes, right)->op15->end
+</textarea>
+<div id="flowchart_canvas"></div>
+
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/2016/10/13/hello-world/" data-toggle="tooltip" data-placement="top"
+                           title="Hello World">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+                <!-- 多说评论框 start -->
+                <div class="comment">
+                    <div class="ds-thread"
+                         data-thread-key="2016/10/14/iOS-RunLoop/"
+                         data-title="iOS RunLoop"
+                         data-url="http://andrewzhucc.github.io/2016/10/14/iOS-RunLoop/">
+                    </div>
                 </div>
-				<hr>
-				</div>
-            
-				
-				
-				
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/2016/10/13/hello-world/">
-                        <h4 class="post-title">
-                            Hello World
-                        </h4>
-                        
-                    </a>
+                <!-- 多说评论框 end -->
+                
+
+                
+
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#RunLoop"><span class="toc-text">RunLoop</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CFRunLoop-vs-NSRunLoop"><span class="toc-text">CFRunLoop vs NSRunLoop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#source0-vs-source1"><span class="toc-text">source0 vs source1</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CFRunLoop-流程"><span class="toc-text">CFRunLoop 流程</span></a></li></ol></li></ol>
                 </div>
-				<hr>
-				</div>
-            
+            </div>
         </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#iOS"
+                           title="iOS">iOS</a>
+                        
+                        <a class="tag" href="/tags/#Code"
+                           title="Code">Code</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
     </div>
-</div>
+</article>
+
+
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    // dynamic User by Hux
+    var _user = 'andrewzhu';
+
+    // duoshuo comment query.
+    var duoshuoQuery = {short_name: _user};
+    (function () {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';
+        ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0]
+        || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+</script>
+<!-- 多说公共JS代码 end -->
+
+
+
+
 
 <!-- Footer -->
 <!-- Footer -->
