@@ -1,0 +1,31 @@
+<html lang="en">
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="msapplication-navbutton-color" content="#600090">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="#600090">
+    <link rel="shortcut icon" href="http://oezaue6s2.bkt.clouddn.com/avator/dogy">
+    <link rel="alternate" type="application/atom+xml" title="Andrew" href="/atom.xml">
+    <script src="/js/jquery.min.js"></script>
+    <title>
+        
+        Test Open URL
+        
+    </title>
+
+    <script>
+      function clickURL() {
+        url = $("#open_url").val();
+        console.log(url)
+        location.href = url;
+      }
+    </script>
+</head>
+<h3>输入要跳转的URL</h3>
+<form>
+  URL:
+  <input id="open_url" type="text" name="url">
+</form>
+<button onclick="clickURL()">跳转</button>
